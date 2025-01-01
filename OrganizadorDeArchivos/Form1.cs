@@ -105,15 +105,16 @@ namespace OrganizadorDeArchivos
 
                     if (Regex.IsMatch(archivo, pattern))
                     {
-                        return;
                     }
                     extension = Path.GetExtension(archivo);
+                    carpetaDestino = Path.Combine(rutaOrigen, "Otros");
+                    carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
+                    checkDirectoryExist(carpetaDestino);
                     if (extension.ToLower() == ".docx" || extension.ToLower() == ".xlsx" || extension.ToLower() == ".pptx" || extension.ToLower() == ".doc")
                     {
                         carpetaDestino = Path.Combine(rutaOrigen, "Office");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
 
                     }
                     if (extension.ToLower() == ".jpg" || extension.ToLower() == ".jpeg" || extension.ToLower() == ".png" || extension.ToLower() == ".gif" || extension.ToLower() == ".jfif" || extension.ToLower() == ".webp" || extension.ToLower() == ".wbmp" || extension.ToLower() == ".raw" || extension.ToLower() == ".psd"
@@ -122,7 +123,6 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Imagenes");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
                     }
 
                     if (extension.ToLower() == ".mp4" || extension.ToLower() == ".avi" || extension.ToLower() == ".mkv" || extension.ToLower() == ".mov" || extension.ToLower() == ".wmv" || extension.ToLower() == ".flv" || extension.ToLower() == ".webm" || extension.ToLower() == ".mpg" || extension.ToLower() == ".3gp")
@@ -130,7 +130,6 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Videos");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
                     }
 
                     if (extension.ToLower() == ".zip" || extension.ToLower() == ".rar" || extension.ToLower() == ".7z" || extension.ToLower() == ".tar" || extension.ToLower() == ".gz" || extension.ToLower() == ".bz2" || extension.ToLower() == ".xz" || extension.ToLower() == ".cab" || extension.ToLower() == ".z"
@@ -139,7 +138,6 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Comprimido");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
                     }
 
                     if (extension.ToLower() == ".exe" || extension.ToLower() == ".app" || extension.ToLower() == ".dmg" || extension.ToLower() == ".bin" || extension.ToLower() == ".bat" || extension.ToLower() == ".sh" || extension.ToLower() == ".jar" || extension.ToLower() == ".apk" || extension.ToLower() == ".msi"
@@ -148,7 +146,6 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Ejecutables");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
                     }
 
                     if (extension.ToLower() == ".mp3" || extension.ToLower() == ".wav" || extension.ToLower() == ".flac" || extension.ToLower() == ".aac" || extension.ToLower() == ".ogg" || extension.ToLower() == ".wma" || extension.ToLower() == ".aiff" || extension.ToLower() == ".m4a" || extension.ToLower() == ".mid"
@@ -157,16 +154,11 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Música");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                        return;
-                    }
-
-                    carpetaDestino = Path.Combine(rutaOrigen, "Otros");
-                    carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
-                    checkDirectoryExist(carpetaDestino);                        
+                    }                  
 
                     nomArchivo = Path.GetFileName(archivo);
                     rutaDestino = Path.Combine(carpetaDestino, nomArchivo);
-                    checkFileExist(rutaDestino, nomArchivo, carpetaDestino);
+                    moveFile(rutaDestino, nomArchivo, carpetaDestino, archivo);
 
                         /*if (File.Exists(rutaDestino))
                         {
@@ -205,20 +197,20 @@ namespace OrganizadorDeArchivos
             ActualizarListBox();
         }
 
-        private void checkFileExist(string path, string nomArchivo, string carpetaDestino)
+        private void moveFile(string path, string nomArchivo, string carpetaDestino, string archivo)
         {
-            if (File.Exists(path))
-            {
-                while (File.Exists(path))
-                {
-                    File.Move()
-                }
-                auxn = rutaOrigen + "\\" + aux2;
-                File.Move(auxn, rutaDestino);
-                nombreArchivo2 += Path.GetFileName(auxn);
-                listBox2.Items.Add(nomArchivo + " -> " + Path.GetFileName(auxn));
-                nombreArchivo2 = "";
-            }
+             while (File.Exists(path))
+             {
+                nomArchivo = nomArchivo.Replace(".", "1.");
+                path = Path.Combine(carpetaDestino, nomArchivo);
+                File.Move(archivo, Path.Combine(rutaOrigen, nomArchivo));
+                archivo = archivo.Replace(".", "1.");
+                MessageBox.Show(path);
+                MessageBox.Show("Archivo: " + archivo);
+                listBox2.Items.Add("Cambiando nombre");
+             }
+             File.Move(archivo, Path.Combine(carpetaDestino, nomArchivo));
+             listBox2.Items.Add(nomArchivo + " -> " + Path.GetFileName(archivo));
         }
 
         private void checkDirectoryExist(string path)
