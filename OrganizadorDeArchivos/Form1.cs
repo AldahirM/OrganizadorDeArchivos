@@ -159,30 +159,6 @@ namespace OrganizadorDeArchivos
                     nomArchivo = Path.GetFileName(archivo);
                     rutaDestino = Path.Combine(carpetaDestino, nomArchivo);
                     moveFile(rutaDestino, nomArchivo, carpetaDestino, archivo);
-
-                        /*if (File.Exists(rutaDestino))
-                        {
-                            nombreArchivo2 += aux2 + " -> ";
-                            while (File.Exists(rutaDestino))
-                            {
-                                auxn = auxn.Replace(".", "1.");
-                                aux2 = aux2.Replace(".", "1.");
-                                rutaDestino = Path.Combine(carpetaDestino, aux2);
-                                File.Move(archivoOrg, auxn);
-                                archivoOrg = archivoOrg.Replace(".", "1.");
-
-                            }
-                            auxn = rutaOrigen + "\\" + aux2;
-                            File.Move(auxn, rutaDestino);
-                            nombreArchivo2 += Path.GetFileName(auxn);
-                            listBox2.Items.Add(nombreArchivo2);
-                            nombreArchivo2 = "";
-                        }
-                        else
-                        {
-                            File.Move(archivo, rutaDestino);
-                        }*/
-                    
                 }
 
                 MessageBox.Show("Los archivos se han ordenado exitosamente.", "Ordenamiento completado",
@@ -199,18 +175,21 @@ namespace OrganizadorDeArchivos
 
         private void moveFile(string path, string nomArchivo, string carpetaDestino, string archivo)
         {
-             while (File.Exists(path))
-             {
+            bool existio = false;
+            string nombreAntiguo = nomArchivo;
+            while (File.Exists(path))
+            {
+                existio = true;
                 nomArchivo = nomArchivo.Replace(".", "1.");
                 path = Path.Combine(carpetaDestino, nomArchivo);
                 File.Move(archivo, Path.Combine(rutaOrigen, nomArchivo));
                 archivo = archivo.Replace(".", "1.");
-                MessageBox.Show(path);
-                MessageBox.Show("Archivo: " + archivo);
-                listBox2.Items.Add("Cambiando nombre");
-             }
-             File.Move(archivo, Path.Combine(carpetaDestino, nomArchivo));
-             listBox2.Items.Add(nomArchivo + " -> " + Path.GetFileName(archivo));
+            }
+            if (existio)
+            {
+                listBox2.Items.Add(nombreAntiguo + " -> " + Path.GetFileName(archivo));
+            }
+            File.Move(archivo, Path.Combine(carpetaDestino, nomArchivo));
         }
 
         private void checkDirectoryExist(string path)
