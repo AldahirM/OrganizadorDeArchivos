@@ -109,7 +109,6 @@ namespace OrganizadorDeArchivos
                     extension = Path.GetExtension(archivo);
                     carpetaDestino = Path.Combine(rutaOrigen, "Otros");
                     carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
-                    checkDirectoryExist(carpetaDestino);
                     if (extension.ToLower() == ".docx" || extension.ToLower() == ".xlsx" || extension.ToLower() == ".pptx" || extension.ToLower() == ".doc")
                     {
                         carpetaDestino = Path.Combine(rutaOrigen, "Office");
@@ -154,8 +153,8 @@ namespace OrganizadorDeArchivos
                         carpetaDestino = Path.Combine(rutaOrigen, "Música");
                         carpetaDestino = Path.Combine(carpetaDestino, extension.TrimStart('.'));
                         checkDirectoryExist(carpetaDestino);
-                    }                  
-
+                    }
+                    checkDirectoryExist(carpetaDestino);
                     nomArchivo = Path.GetFileName(archivo);
                     rutaDestino = Path.Combine(carpetaDestino, nomArchivo);
                     moveFile(rutaDestino, nomArchivo, carpetaDestino, archivo);
